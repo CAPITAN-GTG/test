@@ -10,8 +10,21 @@ function generateClientId() {
   return Math.random().toString(36).substr(2, 9);
 }
 
-// Create HTTP server
-const server = http.createServer();
+// Create HTTP server with health check endpoint
+const server = http.createServer((req, res) => {
+  if (req.url === '/health' || req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      connections: wss.clients.size,
+      rooms: rooms.size
+    }));
+  } else {
+    res.writeHead(404);
+    res.end('Not found');
+  }
+});
 
 // Create WebSocket server
 const wss = new WebSocket.Server({ server });
