@@ -59,7 +59,10 @@ export function useMouseRoom(): UseMouseRoomReturn {
       wsRef.current.close();
     }
 
-    const ws = new WebSocket('ws://localhost:8080');
+    const wsUrl = process.env.NODE_ENV === 'production' 
+      ? (process.env.NEXT_PUBLIC_WS_URL || 'wss://test-production-0d81.up.railway.app')
+      : 'ws://localhost:8080';
+    const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
     roomCodeRef.current = roomCode;
 
