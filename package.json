@@ -5,12 +5,15 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "ws-server": "node server.js",
+    "dev:full": "concurrently \"npm run ws-server\" \"npm run dev\""
   },
   "dependencies": {
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.5.2"
+    "next": "15.5.2",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -18,6 +21,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "@types/ws": "^8.5.10",
+    "concurrently": "^8.2.2"
   }
 }
