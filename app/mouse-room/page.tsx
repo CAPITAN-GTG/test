@@ -5,6 +5,7 @@ import { useMouseRoom } from '../../hooks/useMouseRoom';
 
 interface Peer {
   id: string;
+  username: string;
   x: number;
   y: number;
 }
@@ -17,12 +18,13 @@ const CURSOR_COLORS = [
 
 export default function MouseRoomPage() {
   const [roomCode, setRoomCode] = useState('');
+  const [username, setUsername] = useState('');
   const [isConnecting, setIsConnecting] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const lastRenderTimeRef = useRef<number>(0);
   
-  const { peers, isConnected, clientId, connect, disconnect, sendMousePosition } = useMouseRoom();
+  const { peers, isConnected, clientId, username: myUsername, connect, disconnect, sendMousePosition } = useMouseRoom();
   
   // Interpolated peer positions for smooth animation
   const [interpolatedPeers, setInterpolatedPeers] = useState<Peer[]>([]);
@@ -36,7 +38,16 @@ export default function MouseRoomPage() {
   const handleConnect = () => {
     if (roomCode.trim() && !isConnected) {
       setIsConnecting(true);
-      connect(roomCode.trim());
+      // Validate and sanitize username
+      let displayUsername = username.trim();
+      if (!displayUsername) {
+        displayUsername = `User_${Math.random().toString(36).substr(2, 4)}`;
+      } else if (displayUsername.length > 20) {
+        displayUsername = displayUsername.substring(0, 20);
+      }
+      // Remove any potentially problematic characters
+      displayUsername = displayUsername.replace(/[<>:"/\\|?*]/g, '');
+      connect(roomCode.trim(), displayUsername);
     }
   };
 
@@ -79,6 +90,7 @@ export default function MouseRoomPage() {
       if (currentPeer) {
         return {
           id: targetPeer.id,
+          username: targetPeer.username,
           x: interpolate(currentPeer.x, targetPeer.x, lerpFactor),
           y: interpolate(currentPeer.y, targetPeer.y, lerpFactor)
         };
@@ -154,11 +166,11 @@ export default function MouseRoomPage() {
       ctx.lineWidth = 2;
       ctx.stroke();
       
-      // Draw cursor ID
+      // Draw cursor username
       ctx.fillStyle = '#000000';
       ctx.font = '12px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(peer.id.substring(0, 4), x, y - 15);
+      ctx.fillText(peer.username, x, y - 15);
     });
   };
 
@@ -227,6 +239,21 @@ export default function MouseRoomPage() {
             <h1 className="text-2xl font-bold mb-4 text-center text-black">Mouse Room</h1>
             <div className="space-y-4">
               <div>
+                <label htmlFor="username" className="block text-sm font-medium text-black mb-2">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username..."
+                  maxLength={20}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                  onKeyPress={(e) => e.key === 'Enter' && handleConnect()}
+                />
+              </div>
+              <div>
                 <label htmlFor="roomCode" className="block text-sm font-medium text-black mb-2">
                   Room Code
                 </label>
@@ -257,6 +284,7 @@ export default function MouseRoomPage() {
         <div className="absolute top-4 left-4 bg-white bg-opacity-95 p-4 rounded-lg shadow-lg z-10 border border-gray-200">
           <div className="text-sm text-black">
             <div><strong>Room:</strong> {roomCode}</div>
+            <div><strong>Username:</strong> {myUsername}</div>
             <div><strong>Your ID:</strong> {clientId}</div>
             <div><strong>Connected:</strong> {peers.length + 1} players</div>
             <div><strong>Mouse:</strong> {myMousePos ? `${(myMousePos.x * 100).toFixed(0)}%, ${(myMousePos.y * 100).toFixed(0)}%` : 'Not tracking'}</div>
@@ -335,9 +363,9 @@ export default function MouseRoomPage() {
                 className="w-5 h-5 rounded-full border-2 border-white shadow-lg"
                 style={{ backgroundColor: color }}
               ></div>
-              {/* Peer ID label */}
+              {/* Peer username label */}
               <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                {peer.id.substring(0, 4)}
+                {peer.username}
               </div>
             </div>
           </div>

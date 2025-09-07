@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface Peer {
   id: string;
+  username: string;
   x: number;
   y: number;
 }
@@ -10,7 +11,8 @@ interface UseMouseRoomReturn {
   peers: Peer[];
   isConnected: boolean;
   clientId: string | null;
-  connect: (roomCode: string) => void;
+  username: string | null;
+  connect: (roomCode: string, username: string) => void;
   disconnect: () => void;
   sendMousePosition: (x: number, y: number) => void;
 }
@@ -19,9 +21,11 @@ export function useMouseRoom(): UseMouseRoomReturn {
   const [peers, setPeers] = useState<Peer[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [clientId, setClientId] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   
   const wsRef = useRef<WebSocket | null>(null);
   const roomCodeRef = useRef<string | null>(null);
+  const usernameRef = useRef<string | null>(null);
   const lastMouseUpdateRef = useRef<number>(0);
   const mouseThrottleRef = useRef<number>(1000 / 30); // 30fps throttling
   const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -54,7 +58,7 @@ export function useMouseRoom(): UseMouseRoomReturn {
   }, [isConnected, sendMousePosition]);
 
   // Connect to room
-  const connect = useCallback((roomCode: string) => {
+  const connect = useCallback((roomCode: string, username: string) => {
     if (wsRef.current) {
       wsRef.current.close();
     }
@@ -65,12 +69,14 @@ export function useMouseRoom(): UseMouseRoomReturn {
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
     roomCodeRef.current = roomCode;
+    usernameRef.current = username;
 
     ws.onopen = () => {
       console.log('WebSocket connected');
       ws.send(JSON.stringify({
         type: 'join',
-        roomCode: roomCode
+        roomCode: roomCode,
+        username: username
       }));
       
       // Start client-side heartbeat
@@ -88,8 +94,9 @@ export function useMouseRoom(): UseMouseRoomReturn {
         switch (message.type) {
           case 'joined':
             setClientId(message.clientId);
+            setUsername(usernameRef.current);
             setIsConnected(true);
-            console.log('Joined room:', message.roomCode, 'with ID:', message.clientId);
+            console.log('Joined room:', message.roomCode, 'with ID:', message.clientId, 'username:', usernameRef.current);
             break;
             
           case 'mouse':
@@ -101,6 +108,7 @@ export function useMouseRoom(): UseMouseRoomReturn {
                 const updatedPeers = [...prevPeers];
                 updatedPeers[existingPeerIndex] = {
                   id: message.id,
+                  username: message.username || `User_${message.id.substring(0, 4)}`,
                   x: message.x,
                   y: message.y
                 };
@@ -109,6 +117,7 @@ export function useMouseRoom(): UseMouseRoomReturn {
                 // Add new peer
                 return [...prevPeers, {
                   id: message.id,
+                  username: message.username || `User_${message.id.substring(0, 4)}`,
                   x: message.x,
                   y: message.y
                 }];
@@ -139,6 +148,7 @@ export function useMouseRoom(): UseMouseRoomReturn {
       console.log('WebSocket disconnected');
       setIsConnected(false);
       setClientId(null);
+      setUsername(null);
       setPeers([]);
       
       // Clear heartbeat interval
@@ -167,8 +177,10 @@ export function useMouseRoom(): UseMouseRoomReturn {
     }
     
     roomCodeRef.current = null;
+    usernameRef.current = null;
     setIsConnected(false);
     setClientId(null);
+    setUsername(null);
     setPeers([]);
   }, []);
 
@@ -198,6 +210,7 @@ export function useMouseRoom(): UseMouseRoomReturn {
     peers,
     isConnected,
     clientId,
+    username,
     connect,
     disconnect,
     sendMousePosition

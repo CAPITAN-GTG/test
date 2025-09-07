@@ -3,7 +3,7 @@ const http = require('http');
 
 // In-memory storage for rooms and clients
 const rooms = new Map(); // roomCode -> Set of WebSocket connections
-const clients = new Map(); // WebSocket -> { roomCode, id, isAlive }
+const clients = new Map(); // WebSocket -> { roomCode, id, username, isAlive }
 
 // Generate unique client ID
 function generateClientId() {
@@ -44,7 +44,7 @@ wss.on('connection', (ws) => {
       
       switch (message.type) {
         case 'join':
-          handleJoin(ws, message.roomCode);
+          handleJoin(ws, message.roomCode, message.username);
           break;
         case 'mouse':
           handleMouseMove(ws, message);
@@ -71,8 +71,9 @@ wss.on('connection', (ws) => {
   });
 });
 
-function handleJoin(ws, roomCode) {
+function handleJoin(ws, roomCode, username) {
   const clientId = generateClientId();
+  const displayUsername = username && username.trim() ? username.trim() : `User_${clientId.substring(0, 4)}`;
   
   // Remove client from any existing room
   if (clients.has(ws)) {
@@ -86,7 +87,7 @@ function handleJoin(ws, roomCode) {
   }
   
   rooms.get(roomCode).add(ws);
-  clients.set(ws, { roomCode, id: clientId, isAlive: true });
+  clients.set(ws, { roomCode, id: clientId, username: displayUsername, isAlive: true });
   
   // Send confirmation with client ID
   ws.send(JSON.stringify({
@@ -96,9 +97,9 @@ function handleJoin(ws, roomCode) {
   }));
   
   // Notify other clients in the room about the new peer
-  notifyPeerJoin(roomCode, clientId, ws);
+  notifyPeerJoin(roomCode, clientId, displayUsername, ws);
   
-  console.log(`Client ${clientId} joined room ${roomCode}`);
+  console.log(`Client ${clientId} (${displayUsername}) joined room ${roomCode}`);
 }
 
 function handleMouseMove(ws, message) {
@@ -112,6 +113,7 @@ function handleMouseMove(ws, message) {
   const mouseMessage = JSON.stringify({
     type: 'mouse',
     id: client.id,
+    username: client.username,
     x: message.x,
     y: message.y,
     t: Date.now()
@@ -147,13 +149,14 @@ function removeClientFromRoom(roomCode, ws) {
 }
 
 // Notify other clients when a peer joins
-function notifyPeerJoin(roomCode, clientId, joiningWs) {
+function notifyPeerJoin(roomCode, clientId, username, joiningWs) {
   const room = rooms.get(roomCode);
   if (!room) return;
   
   const peerJoinMessage = JSON.stringify({
     type: 'peer-join',
-    id: clientId
+    id: clientId,
+    username: username
   });
   
   room.forEach((ws) => {
