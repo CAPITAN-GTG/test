@@ -1,5 +1,8 @@
 'use client';
 
+// Route segment config
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { Canvas } from '@/components/Canvas';
 import { PropertyPanel } from '@/components/PropertyPanel';
@@ -288,7 +291,9 @@ export default function Home() {
     const duplicatedIds: string[] = [];
     boxesToDuplicate.forEach((box) => {
       const newBoxId = duplicateBox(box.id, offsetX, offsetY);
-      duplicatedIds.push(newBoxId);
+      if (newBoxId) {
+        duplicatedIds.push(newBoxId);
+      }
     });
     
     // Select all duplicated boxes
@@ -337,13 +342,13 @@ export default function Home() {
                     <ColorPicker
                       key={gridColorPickerKey}
                       value={gridColor}
-                      onChange={(rgba) => {
+                      onChange={((rgba: [number, number, number, number]) => {
                         const r = Math.round(rgba[0]);
                         const g = Math.round(rgba[1]);
                         const b = Math.round(rgba[2]);
                         const a = rgba[3];
                         setGridColor(`rgba(${r}, ${g}, ${b}, ${a})`);
-                      }}
+                      }) as any}
                       className="max-w-full"
                     >
                       <ColorPickerSelection className="h-32" />
@@ -381,13 +386,13 @@ export default function Home() {
                     <ColorPicker
                       key={canvasBgColorPickerKey}
                       value={canvasBackgroundColor}
-                      onChange={(rgba) => {
+                      onChange={((rgba: [number, number, number, number]) => {
                         const r = Math.round(rgba[0]);
                         const g = Math.round(rgba[1]);
                         const b = Math.round(rgba[2]);
                         const a = rgba[3];
                         setCanvasBackgroundColor(`rgba(${r}, ${g}, ${b}, ${a})`);
-                      }}
+                      }) as any}
                       className="max-w-full"
                     >
                       <ColorPickerSelection className="h-32" />

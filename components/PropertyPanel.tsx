@@ -117,7 +117,7 @@ function TransportSlider({ icons, selectedIcon, onSelect }: TransportSliderProps
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
-      className={`flex gap-3 overflow-x-scroll pb-2 cursor-grab active:cursor-grabbing scrollbar-hide bg-card/60 rounded-2xl p-3 border-2 border-border/40 ${
+      className={`flex gap-2 overflow-x-scroll pb-2 cursor-grab active:cursor-grabbing scrollbar-hide bg-card/60 rounded-xl p-2 border-2 border-border/40 ${
         isDragging ? 'select-none' : ''
       }`}
     >
@@ -135,7 +135,7 @@ function TransportSlider({ icons, selectedIcon, onSelect }: TransportSliderProps
             onMouseDown={(e) => {
               if (e.detail > 1) e.preventDefault();
             }}
-            className={`p-4 rounded-xl border-2 transition-all duration-300 flex items-center justify-center min-w-[3.5rem] flex-shrink-0 ${
+            className={`p-2.5 rounded-lg border-2 transition-all duration-300 flex items-center justify-center min-w-[3rem] flex-shrink-0 ${
               isSelected
                 ? 'bg-primary/30 border-primary/60 text-primary-foreground shadow-md'
                 : 'bg-card/80 border-border/50 text-muted-foreground hover:bg-card hover:text-foreground hover:border-primary/40'
@@ -211,7 +211,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
     if (uploadState.files.length > 0 && uploadState.files[0].preview) {
       const imageUrl = uploadState.files[0].preview;
       if (imageUrl !== backgroundImage) {
-        const newProperties = {
+        const newProperties: any = {
           ...box.properties,
           backgroundImage: imageUrl,
         };
@@ -224,12 +224,12 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
   }, [uploadState.files, box.id, onUpdate, backgroundImage]);
 
   return (
-    <div className="w-80 border-l-2 border-border/60 bg-card flex flex-col h-full shadow-2xl">
-      <div className="px-6 py-4 border-b-2 border-border/60 flex justify-between items-center bg-secondary/30 backdrop-blur-md">
-        <h2 className="text-xl font-bold text-foreground tracking-tight">
+    <div className="w-96 border-l-2 border-border/60 bg-card flex flex-col h-full shadow-2xl">
+      <div className="px-5 py-3 border-b-2 border-border/60 flex justify-between items-center bg-secondary/30 backdrop-blur-md">
+        <h2 className="text-lg font-bold text-foreground tracking-tight">
           Properties
         </h2>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => {
               if (box) {
@@ -237,14 +237,14 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                 onClose();
               }
             }}
-            className="text-destructive hover:text-destructive hover:bg-destructive/15 rounded-xl p-2.5 transition-all duration-300 flex items-center justify-center border-2 border-transparent hover:border-destructive/30"
+            className="text-destructive hover:text-destructive hover:bg-destructive/15 rounded-xl p-2 transition-all duration-300 flex items-center justify-center border-2 border-transparent hover:border-destructive/30"
             title="Delete box"
           >
-            <Trash2 className="size-5" />
+            <Trash2 className="size-4" />
           </button>
           <button
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground hover:bg-primary/20 rounded-xl p-2.5 transition-all duration-300 text-3xl leading-none flex items-center justify-center w-11 h-11 border-2 border-transparent hover:border-primary/30"
+            className="text-muted-foreground hover:text-foreground hover:bg-primary/20 rounded-xl p-2 transition-all duration-300 text-2xl leading-none flex items-center justify-center w-9 h-9 border-2 border-transparent hover:border-primary/30"
             title="Close"
           >
             ×
@@ -252,45 +252,45 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide bg-card/50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide bg-card/50">
         {/* Label (always present) */}
-        <div className="bg-secondary/20 rounded-2xl p-4 border-2 border-border/40">
-          <label className="block text-base font-semibold text-foreground mb-3">
+        <div className="bg-secondary/20 rounded-xl p-3 border-2 border-border/40">
+          <label className="block text-sm font-semibold text-foreground mb-2">
             Label
           </label>
           <input
             type="text"
             value={box.label}
             onChange={(e) => onUpdate(box.id, { label: e.target.value })}
-            className="w-full px-4 py-3 border-2 border-border/50 rounded-xl bg-card/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 hover:bg-card hover:border-primary/40 transition-all duration-300 text-base"
+            className="w-full px-3 py-2 border-2 border-border/50 rounded-lg bg-card/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 hover:bg-card hover:border-primary/50 transition-all duration-300 text-sm"
           />
         </div>
 
         {/* Description */}
-        <div className="bg-secondary/20 rounded-2xl p-4 border-2 border-border/40">
-          <label className="block text-base font-semibold text-foreground mb-3">
+        <div className="bg-secondary/20 rounded-xl p-3 border-2 border-border/40">
+          <label className="block text-sm font-semibold text-foreground mb-2">
             Description
           </label>
           <textarea
             value={box.description || ''}
             onChange={(e) => onUpdate(box.id, { description: e.target.value })}
             placeholder="Add a description..."
-            rows={3}
-            className="w-full px-4 py-3 border-2 border-border/50 rounded-xl bg-card/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 hover:bg-card hover:border-primary/40 transition-all duration-300 resize-none text-base"
+            rows={2}
+            className="w-full px-3 py-2 border-2 border-border/50 rounded-lg bg-card/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 hover:bg-card hover:border-primary/50 transition-all duration-300 resize-none text-sm"
           />
         </div>
 
         {/* Background */}
-        <div className="bg-secondary/20 rounded-2xl p-4 border-2 border-border/40">
-          <div className="flex items-center justify-between mb-4">
-            <label className="text-base font-semibold text-foreground">
+        <div className="bg-secondary/20 rounded-xl p-3 border-2 border-border/40">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-semibold text-foreground">
               Background
             </label>
             <div className="flex items-center gap-1.5">
               <DropdownMenu onOpenChange={(open) => { if (open) setBgColorPickerKey(prev => prev + 1); }}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-8 h-8 rounded-xl border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
+                    className="w-7 h-7 rounded-lg border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
                     style={{
                       backgroundColor: (box.properties.backgroundColor as string) || '#000000',
                     }}
@@ -306,13 +306,13 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <ColorPicker
                     key={bgColorPickerKey}
                     value={(box.properties.backgroundColor as string) || '#000000'}
-                    onChange={(rgba) => {
+                    onChange={((rgba: [number, number, number, number]) => {
                       const r = Math.round(rgba[0]);
                       const g = Math.round(rgba[1]);
                       const b = Math.round(rgba[2]);
                       const a = rgba[3];
                       const rgbaString = `rgba(${r}, ${g}, ${b}, ${a})`;
-                      const newProperties = {
+                      const newProperties: any = {
                         ...box.properties,
                         backgroundColor: rgbaString,
                       };
@@ -321,7 +321,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                       // Clear file upload state
                       uploadActions.clearFiles();
                       onUpdate(box.id, { properties: newProperties });
-                    }}
+                    }) as any}
                     className="max-w-full"
                   >
                     <ColorPickerSelection className="h-32" />
@@ -342,7 +342,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
               <DropdownMenu onOpenChange={(open) => { if (open) setTextColorPickerKey(prev => prev + 1); }}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-8 h-8 rounded-xl border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
+                    className="w-7 h-7 rounded-lg border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
                     style={{
                       backgroundColor: (box.properties.textColor as string) || '#ffffff',
                     }}
@@ -358,7 +358,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <ColorPicker
                     key={textColorPickerKey}
                     value={(box.properties.textColor as string) || '#ffffff'}
-                    onChange={(rgba) => {
+                    onChange={((rgba: [number, number, number, number]) => {
                       const r = Math.round(rgba[0]);
                       const g = Math.round(rgba[1]);
                       const b = Math.round(rgba[2]);
@@ -369,7 +369,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                         textColor: rgbaString,
                       };
                       onUpdate(box.id, { properties: newProperties });
-                    }}
+                    }) as any}
                     className="max-w-full"
                   >
                     <ColorPickerSelection className="h-32" />
@@ -412,7 +412,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={uploadActions.openFileDialog}
-                    className="w-full px-4 py-3 border-2 border-border/50 rounded-xl bg-card/80 text-foreground hover:bg-card hover:border-primary/50 transition-all duration-300 flex items-center justify-center gap-2 text-base font-semibold shadow-sm hover:shadow-md"
+                    className="w-full px-3 py-2 border-2 border-border/50 rounded-lg bg-card/80 text-foreground hover:bg-card hover:border-primary/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-semibold shadow-sm hover:shadow-md"
                   >
                     <Upload className="size-4" />
                     Change
@@ -420,11 +420,11 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <button
                     onClick={() => {
                       uploadActions.clearFiles();
-                      const newProperties = { ...box.properties };
+                      const newProperties: any = { ...box.properties };
                       delete newProperties.backgroundImage;
                       onUpdate(box.id, { properties: newProperties });
                     }}
-                    className="w-full px-4 py-3 border-2 border-border/50 rounded-xl bg-card/80 text-destructive hover:bg-destructive/15 hover:border-destructive/40 transition-all duration-300 flex items-center justify-center gap-2 text-base font-semibold shadow-sm hover:shadow-md"
+                    className="w-full px-3 py-2 border-2 border-border/50 rounded-lg bg-card/80 text-destructive hover:bg-destructive/15 hover:border-destructive/40 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-semibold shadow-sm hover:shadow-md"
                   >
                     <X className="size-4" />
                     Remove
@@ -441,7 +441,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
             <div className="space-y-3">
               <button
                 onClick={uploadActions.openFileDialog}
-                className="w-full px-4 py-3 border-2 border-border/50 rounded-xl bg-card/80 text-foreground hover:bg-card hover:border-primary/50 transition-all duration-300 flex items-center justify-center gap-2 text-base font-semibold shadow-sm hover:shadow-md"
+                className="w-full px-3 py-2 border-2 border-border/50 rounded-lg bg-card/80 text-foreground hover:bg-card hover:border-primary/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-semibold shadow-sm hover:shadow-md"
               >
                 <Upload className="size-4" />
                 Upload Image
@@ -456,17 +456,17 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
         </div>
 
         {/* Date */}
-        <div className="bg-secondary/20 rounded-2xl p-4 border-2 border-border/40">
-          <div className="flex items-center justify-between mb-4">
-            <label className="flex items-center gap-2 text-base font-semibold text-foreground">
-              <CalendarIcon className="size-5 text-foreground" />
+        <div className="bg-secondary/20 rounded-xl p-3 border-2 border-border/40">
+          <div className="flex items-center justify-between mb-2">
+            <label className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <CalendarIcon className="size-4 text-foreground" />
               Date
             </label>
             <div className="flex items-center gap-1.5">
               <DropdownMenu onOpenChange={(open) => { if (open) setDateBgColorPickerKey(prev => prev + 1); }}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-8 h-8 rounded-xl border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
+                    className="w-7 h-7 rounded-lg border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
                     style={{
                       backgroundColor: (box.properties.dateBgColor as string) || '#D4A574',
                     }}
@@ -482,7 +482,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <ColorPicker
                     key={dateBgColorPickerKey}
                     value={(box.properties.dateBgColor as string) || '#D4A574'}
-                    onChange={(rgba) => {
+                    onChange={((rgba: [number, number, number, number]) => {
                       const r = Math.round(rgba[0]);
                       const g = Math.round(rgba[1]);
                       const b = Math.round(rgba[2]);
@@ -493,7 +493,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                         dateBgColor: rgbaString,
                       };
                       onUpdate(box.id, { properties: newProperties });
-                    }}
+                    }) as any}
                     className="max-w-full"
                   >
                     <ColorPickerSelection className="h-32" />
@@ -514,7 +514,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
               <DropdownMenu onOpenChange={(open) => { if (open) setDateTextColorPickerKey(prev => prev + 1); }}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-8 h-8 rounded-xl border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
+                    className="w-7 h-7 rounded-lg border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
                     style={{
                       backgroundColor: (box.properties.dateTextColor as string) || '#ffffff',
                     }}
@@ -530,7 +530,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <ColorPicker
                     key={dateTextColorPickerKey}
                     value={(box.properties.dateTextColor as string) || '#ffffff'}
-                    onChange={(rgba) => {
+                    onChange={((rgba: [number, number, number, number]) => {
                       const r = Math.round(rgba[0]);
                       const g = Math.round(rgba[1]);
                       const b = Math.round(rgba[2]);
@@ -541,7 +541,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                         dateTextColor: rgbaString,
                       };
                       onUpdate(box.id, { properties: newProperties });
-                    }}
+                    }) as any}
                     className="max-w-full"
                   >
                     <ColorPickerSelection className="h-32" />
@@ -569,7 +569,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   setDateMode('single');
                   // Clear range when switching to single
                   if (dateRange) {
-                    const newProperties = { ...box.properties };
+                    const newProperties: any = { ...box.properties };
                     delete newProperties.dateRange;
                     if (dateRange.from) {
                       newProperties.date = dateRange.from;
@@ -577,7 +577,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                     onUpdate(box.id, { properties: newProperties });
                   }
                 }}
-                className={`flex-1 px-4 py-2.5 text-sm rounded-xl border-2 transition-all duration-300 font-semibold ${
+                className={`flex-1 px-3 py-1.5 text-xs rounded-lg border-2 transition-all duration-300 font-semibold ${
                   dateMode === 'single'
                     ? 'bg-primary/30 border-primary/60 text-primary-foreground shadow-md'
                     : 'bg-card/80 border-border/50 text-muted-foreground hover:bg-card hover:border-primary/40 hover:text-foreground'
@@ -590,7 +590,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   setDateMode('range');
                   // Convert single date to range start when switching
                   if (date && !dateRange) {
-                    const newProperties = {
+                    const newProperties: any = {
                       ...box.properties,
                       dateRange: { from: date, to: undefined },
                     };
@@ -598,7 +598,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                     onUpdate(box.id, { properties: newProperties });
                   }
                 }}
-                className={`flex-1 px-4 py-2.5 text-sm rounded-xl border-2 transition-all duration-300 font-semibold ${
+                className={`flex-1 px-3 py-1.5 text-xs rounded-lg border-2 transition-all duration-300 font-semibold ${
                   dateMode === 'range'
                     ? 'bg-primary/30 border-primary/60 text-primary-foreground shadow-md'
                     : 'bg-card/80 border-border/50 text-muted-foreground hover:bg-card hover:border-primary/40 hover:text-foreground'
@@ -611,7 +611,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
             {/* Calendar popover */}
             <DropdownMenu open={calendarOpen} onOpenChange={setCalendarOpen}>
               <DropdownMenuTrigger asChild>
-                <button className="w-full px-4 py-3 border-2 border-border/50 rounded-xl bg-card/80 text-foreground text-left text-base hover:bg-card hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md font-medium">
+                <button className="w-full px-3 py-2 border-2 border-border/50 rounded-lg bg-card/80 text-foreground text-left text-sm hover:bg-card hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md font-medium">
                   {dateMode === 'single' ? (
                     date ? (
                       format(date, 'MMM d, yyyy')
@@ -651,11 +651,12 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <X className="size-3 text-foreground" />
                 </button>
                 <Calendar
-                  mode={dateMode}
-                  selected={dateMode === 'single' ? date : dateRange}
-                  onSelect={(selected) => {
+                  {...({
+                    mode: dateMode,
+                    selected: dateMode === 'single' ? date : dateRange,
+                    onSelect: (selected: any) => {
                     if (dateMode === 'single') {
-                      const newProperties = {
+                      const newProperties: any = {
                         ...box.properties,
                         date: selected as Date,
                       };
@@ -665,7 +666,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                     } else {
                       const range = selected as DateRange | undefined;
                       if (range?.from && range?.to) {
-                        const newProperties = {
+                        const newProperties: any = {
                           ...box.properties,
                           dateRange: { from: range.from, to: range.to },
                         };
@@ -673,7 +674,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                         onUpdate(box.id, { properties: newProperties });
                         // Don't close automatically - user can click outside or X button
                       } else if (range?.from) {
-                        const newProperties = {
+                        const newProperties: any = {
                           ...box.properties,
                           dateRange: { from: range.from, to: undefined },
                         };
@@ -681,9 +682,10 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                         onUpdate(box.id, { properties: newProperties });
                       }
                     }
-                  }}
-                  className="rounded-md border-0 shadow-none"
-                  captionLayout="dropdown"
+                    },
+                    className: "rounded-md border-0 shadow-none",
+                    captionLayout: "dropdown"
+                  } as any)}
                 />
               </DropdownMenuContent>
             </DropdownMenu>
@@ -691,8 +693,8 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
         </div>
 
         {/* Cost/Earn Slider */}
-        <div className="bg-secondary/20 rounded-2xl p-4 border-2 border-border/40">
-          <label className="block text-base font-semibold text-foreground mb-4">
+        <div className="bg-secondary/20 rounded-xl p-3 border-2 border-border/40">
+          <label className="block text-sm font-semibold text-foreground mb-2">
             Cost/Earn
           </label>
           {/* Tabs */}
@@ -712,9 +714,9 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                     };
                     onUpdate(box.id, { properties: newProperties });
                   }}
-                  className={`flex-1 px-4 py-3 transition-all duration-300 text-base font-semibold border-2 ${
-                    isFirst ? 'rounded-l-xl' : ''
-                  } ${isLast ? 'rounded-r-xl' : ''} ${
+                  className={`flex-1 px-3 py-2 transition-all duration-300 text-sm font-semibold border-2 ${
+                    isFirst ? 'rounded-l-lg' : ''
+                  } ${isLast ? 'rounded-r-lg' : ''} ${
                     isCost && !isFirst && !isLast ? 'border-l-0 border-r-0' : ''
                   } ${
                     isSelected
@@ -751,11 +753,11 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   onUpdate(box.id, { properties: newProperties });
                 }}
                 placeholder="0.00"
-                className="w-32 px-3 py-2.5 border-2 border-border/50 rounded-l-xl bg-card/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 hover:bg-card hover:border-primary/50 transition-all duration-300 text-sm"
+                className="w-28 px-2.5 py-2 border-2 border-border/50 rounded-l-lg bg-card/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 hover:bg-card hover:border-primary/50 transition-all duration-300 text-sm"
               />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="px-3 py-2.5 border-2 border-l-0 border-border/50 rounded-r-xl bg-card/80 text-foreground hover:bg-card hover:border-primary/50 transition-all duration-300 flex items-center justify-center shadow-sm hover:shadow-md">
+                  <button className="px-2.5 py-2 border-2 border-l-0 border-border/50 rounded-r-lg bg-card/80 text-foreground hover:bg-card hover:border-primary/50 transition-all duration-300 flex items-center justify-center shadow-sm hover:shadow-md">
                     {(() => {
                       const curr = CURRENCIES.find((c) => c.code === currency);
                       const Icon = curr?.icon || DollarSign;
@@ -791,16 +793,16 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
         </div>
 
         {/* Transport Slider */}
-        <div className="bg-secondary/20 rounded-2xl p-4 border-2 border-border/40">
-          <div className="flex items-center justify-between mb-4">
-            <label className="text-base font-semibold text-foreground">
+        <div className="bg-secondary/20 rounded-xl p-3 border-2 border-border/40">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-semibold text-foreground">
               Transport
             </label>
             <div className="flex items-center gap-1.5">
               <DropdownMenu onOpenChange={(open) => { if (open) setTransportBgColorPickerKey(prev => prev + 1); }}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-8 h-8 rounded-xl border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
+                    className="w-7 h-7 rounded-lg border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
                     style={{
                       backgroundColor: (box.properties.transportBgColor as string) || '#E8A87C',
                     }}
@@ -816,7 +818,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <ColorPicker
                     key={transportBgColorPickerKey}
                     value={(box.properties.transportBgColor as string) || '#E8A87C'}
-                    onChange={(rgba) => {
+                    onChange={((rgba: [number, number, number, number]) => {
                       const r = Math.round(rgba[0]);
                       const g = Math.round(rgba[1]);
                       const b = Math.round(rgba[2]);
@@ -827,7 +829,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                         transportBgColor: rgbaString,
                       };
                       onUpdate(box.id, { properties: newProperties });
-                    }}
+                    }) as any}
                     className="max-w-full"
                   >
                     <ColorPickerSelection className="h-32" />
@@ -848,7 +850,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
               <DropdownMenu onOpenChange={(open) => { if (open) setTransportIconColorPickerKey(prev => prev + 1); }}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="w-8 h-8 rounded-xl border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
+                    className="w-7 h-7 rounded-lg border-2 border-border/50 shadow-md hover:shadow-lg hover:border-primary/60 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 flex-shrink-0"
                     style={{
                       backgroundColor: (box.properties.transportIconColor as string) || '#ffffff',
                     }}
@@ -864,7 +866,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                   <ColorPicker
                     key={transportIconColorPickerKey}
                     value={(box.properties.transportIconColor as string) || '#ffffff'}
-                    onChange={(rgba) => {
+                    onChange={((rgba: [number, number, number, number]) => {
                       const r = Math.round(rgba[0]);
                       const g = Math.round(rgba[1]);
                       const b = Math.round(rgba[2]);
@@ -875,7 +877,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                         transportIconColor: rgbaString,
                       };
                       onUpdate(box.id, { properties: newProperties });
-                    }}
+                    }) as any}
                     className="max-w-full"
                   >
                     <ColorPickerSelection className="h-32" />
@@ -901,7 +903,7 @@ function PropertyPanelComponent({ box, onUpdate, onClose, onDelete }: PropertyPa
                 const newProperties = { ...box.properties, transportIcon: 'none' };
                 onUpdate(box.id, { properties: newProperties });
               }}
-              className={`px-4 py-2.5 rounded-xl border-2 transition-all duration-300 text-base font-semibold ${
+              className={`px-3 py-1.5 rounded-lg border-2 transition-all duration-300 text-sm font-semibold ${
                 transportIcon === 'none'
                   ? 'bg-primary/30 border-primary/60 text-primary-foreground shadow-md'
                   : 'bg-card/80 border-border/50 text-muted-foreground hover:bg-card hover:text-foreground hover:border-primary/40'
